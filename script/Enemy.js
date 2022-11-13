@@ -9,14 +9,19 @@ export class Enemy {
         this._framesQuanitity = framesQuantity
         this._positionX = initialX
         this._positionY = initialY
-        this._width = width * scale
-        this._height = height * scale
+        this._width = width
+        this._height = height
         this._speedModifier = speedModifier
     }
 
     move(vectorX, vectorY) {
         this._positionX += vectorX
         this._positionY += vectorY
+    }
+
+    setPosition(x, y) {
+        this._positionX = x
+        this._positionY = y
     }
 
     moveRandom(distance) {
@@ -29,11 +34,16 @@ export class Enemy {
     }
 
     getFrameX() {
-        if (this.frame % this._staggerFrames === 0) {
-            this.frameNumber = this.frame % this._framesQuanitity
+        if (this.frame === this._staggerFrames) {
+            this.frameNumber++;
+            this.frame = 0;
         }
 
-        return this.width * this.frameNumber
+        if (this.frameNumber >= this._framesQuanitity) {
+            this.frameNumber = 0;
+        }
+
+        return this.spriteWidth * this.frameNumber
     }
 
     nextFrame() {
@@ -48,12 +58,20 @@ export class Enemy {
         return this._positionY
     }
 
-    get width() {
+    get spriteWidth() {
         return this._width
     }
 
-    get height() {
+    get spriteHeight() {
         return this._height
+    }
+
+    get scaledWidth() {
+        return this.spriteWidth * this.scale
+    }
+
+    get scaledHeight() {
+        return this.spriteHeight * this.scale
     }
 
     get speedModifier() {
@@ -62,5 +80,9 @@ export class Enemy {
 
     get image() {
         return this._image
+    }
+
+    get scale() {
+        return this._scale;
     }
 }

@@ -1,9 +1,45 @@
+* {
+    margin: 0;
+}
+
 #canvas1 {
     position: absolute;
     border: 3px solid black;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 900px;
     width: 450px;
+}
+
+ul {
+    font-family: 'Oswald', sans-serif;
+    display: flex;
+    font-size: min(6vh, 6vw);
+    text-align: left;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #074a4a;
+    color: white;
+    line-height: 2;
+}
+
+a {
+    padding: 1rem;
+}
+
+li:hover {
+    background-color: #063434;
+    padding: 0;
+    cursor: pointer;
+}
+
+.chosen {
+    background-color: #208532;
+    padding: 0;
+}
+
+.chosen:hover {
+    background-color: #208532;
 }

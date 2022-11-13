@@ -1,7 +1,6 @@
 export const config = {
     canvasWidth: 450,
-    canvasHeight: 900,
-
+    canvasHeight: 600,
     staggerFrames: 4,
 }
 
