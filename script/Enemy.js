@@ -15,8 +15,8 @@ export class Enemy {
     }
 
     move(vectorX, vectorY) {
-        this._positionX += vectorX
-        this._positionY += vectorY
+        this._positionX += vectorX * this.speedModifier
+        this._positionY += vectorY * this.speedModifier
     }
 
     setPosition(x, y) {
@@ -25,10 +25,8 @@ export class Enemy {
     }
 
     moveRandom(distance) {
-        const realDistance = distance * this.speedModifier * this._scale
-
-        const randomX = Math.random() * realDistance * 2 - realDistance
-        const randomY = Math.random() * realDistance * 2 - realDistance
+        const randomX = Math.random() * distance * 2 - distance
+        const randomY = Math.random() * distance * 2 - distance
 
         this.move(randomX, randomY);
     }

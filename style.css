@@ -27,6 +27,7 @@ ul {
 
 a {
     padding: 1rem;
+    user-select: none;
 }
 
 li:hover {
