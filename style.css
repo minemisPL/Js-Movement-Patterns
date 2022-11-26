@@ -1,20 +1,23 @@
-* {
+body {
     margin: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 #canvas1 {
-    position: absolute;
+    display: flex;
+    margin: auto;
     border: 3px solid black;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 450px;
 }
 
 ul {
     font-family: 'Oswald', sans-serif;
     display: flex;
-    font-size: min(6vh, 6vw);
+    font-size: min(3vh, 6vw);
     text-align: left;
     list-style-type: none;
     margin: 0;
@@ -43,4 +46,50 @@ li:hover {
 
 .chosen:hover {
     background-color: #208532;
+}
+
+#ghostControls {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 30%;
+    margin: 1rem auto;
+    font-family: 'Oswald', sans-serif;
+    font-size: min(6vh, 6vw);
+    text-align: center;
+    align-items: center;
+}
+
+#reverseMovement {
+    display: flex;
+    font-size: 1.2rem;
+    height: 3rem;
+}
+
+#reverseMovement > input {
+    width: max(10vw, 7rem);
+}
+
+#xDivider, #yDivider {
+    height: 3rem;
+}
+
+.changeValuesLabel {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+footer {
+    font-family: 'Oswald', sans-serif;
+    font-size: min(6vh, 6vw);
+    text-align: center;
+    height: 5rem;
+    margin-top: 1rem;
+    background-color: #074a4a;
+    color: white;
+    margin-bottom: 0;
+}
+
+.invisible {
+    visibility: hidden;
 }

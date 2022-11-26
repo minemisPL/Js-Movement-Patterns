@@ -1,9 +1,10 @@
 /** @type {HTMLCanvasElement} */
 import {config} from "./data.js";
-import {Enemy} from "./Enemy.js";
 import {enemiesData} from "./data.js";
-import {buttonInit, canvasConfig, enemyInit} from "./initConfig.js";
-import {animate, animationInit} from "./animation.js";
+import {buttonInit, canvasConfig, enemyInit, toggleButtonsInit, xDividerInit, yDividerInit} from "./initConfig.js";
+import {animate} from "./animationHandler.js";
+import {animationInit} from "./animations.js";
+import {createEnemies} from "./enemyCreator.js";
 
 const canvas = document.getElementById('canvas1')
 const ctx = canvas.getContext('2d')
@@ -13,30 +14,13 @@ const flyingBtn = document.getElementById("flyingBatBtn")
 const ghostBtn = document.getElementById("ghostBtn")
 const razorBtn = document.getElementById("razorBallBtn")
 
-const createEnemies = (quantity, enemyData) => {
-    const enemies = [];
+const toggleXBtn = document.getElementById("toggleX")
+const toggleYBtn = document.getElementById("toggleY")
 
-    for (let i = 0; i < quantity; i++) {
-        const speed = Math.random() * 1.5 + 1
-        const scale = Math.random() * 0.5 + 0.2
+const xDividerInput = document.getElementById("xDivider")
+const yDividerInput = document.getElementById("yDivider")
 
-        enemies.push(new Enemy(
-            enemyData.image,
-            enemyData.framesQuantity,
-            3,
-            Math.random() * (config.canvasWidth- enemyData.spriteWidth * scale),
-            Math.random() * (config.canvasHeight- enemyData.spriteHeight * scale),
-            enemyData.spriteWidth,
-            enemyData.spriteHeight,
-            scale,
-            speed
-        ))
-    }
-
-    return enemies
-}
-
-const buttons = [
+const changeAnimationButtons = [
     {
         id: "IDLE_BAT",
         button: idleBtn,
@@ -58,25 +42,28 @@ const buttons = [
 const enemyGroups = [
     {
         id: "IDLE_BAT",
-        enemyGroup: createEnemies(20, enemiesData[0])
+        enemyGroup: createEnemies(config, 20, enemiesData[0])
     },
     {
         id: "FLYING_BAT",
-        enemyGroup: createEnemies(20, enemiesData[1])
+        enemyGroup: createEnemies(config,20, enemiesData[1], 0.2, 5)
     },
     {
         id: "GHOST",
-        enemyGroup: createEnemies(20, enemiesData[2])
+        enemyGroup: createEnemies(config,20, enemiesData[2], 2, 150, 0.5, 50)
     },
     {
         id: "RAZOR_BALL",
-        enemyGroup: createEnemies(20, enemiesData[3])
+        enemyGroup: createEnemies(config,20, enemiesData[3])
     },
 ]
 
 canvasConfig(canvas, config)
-buttonInit(buttons)
+buttonInit(changeAnimationButtons)
 enemyInit(enemyGroups)
 animationInit()
+toggleButtonsInit(toggleXBtn, toggleYBtn)
+xDividerInit(xDividerInput)
+yDividerInit(yDividerInput)
 
 animate(ctx, config);

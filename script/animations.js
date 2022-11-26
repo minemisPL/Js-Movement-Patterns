@@ -1,70 +1,7 @@
-import {enemyManager} from "./EnemyManager.js";
+import {animationController} from "./animationHandler.js";
+import {ghostController} from "./GhostController.js";
 
-class AnimationController {
-    constructor(initialAnimation) {
-        this._currentAnimationId = initialAnimation
-        this._animationList = []
-        this._currentFrame = 0
-    }
-
-    addAnimation(animation, id) {
-        this._animationList.push({
-            animation: animation,
-            id: id
-        })
-    }
-
-    getAnimation(id) {
-        let foundAnimation = null
-
-        this._animationList.forEach(animationObj => {
-            if (animationObj.id === id) {
-                foundAnimation = animationObj.animation
-                return
-            }
-        })
-
-        return foundAnimation
-    }
-
-    nextFrame() {
-        this._currentFrame++
-    }
-
-    get currentFrame() {
-        return this._currentFrame
-    }
-
-    get currentAnimationId() {
-        return this._currentAnimationId
-    }
-
-    set currentAnimationId(animationId) {
-        this._currentAnimationId = animationId
-    }
-}
-
-export const animationController = new AnimationController("IDLE_BAT")
-
-export const animate = (ctx, config) => {
-    ctx.clearRect(0,0, config.canvasWidth, config.canvasHeight)
-
-    const animationId = animationController.currentAnimationId
-    const frame = animationController.currentFrame
-
-    const enemies = enemyManager.getEnemyGroup(animationId)
-    const animation = animationController.getAnimation(animationId)
-
-    enemies.forEach(enemy => {
-        animation(ctx, enemy, config, frame)
-    })
-
-    window.requestAnimationFrame(() => {
-        animate(ctx, config)
-    });
-}
-
-const drawFlyingBat = (ctx, bat, config, frame) => {
+export const drawFlyingBat = (ctx, bat, config, frame) => {
     function correctPositionFlyingBat(enemy) {
         if (enemy.positionX < -enemy.scaledWidth) {
             enemy.setPosition(config.canvasWidth, enemy.positionY)
@@ -84,15 +21,13 @@ const drawFlyingBat = (ctx, bat, config, frame) => {
     }
 
     function moveFlyingBat(bat, frame) {
-        if (frame % 3 === 0) {
-            bat.move(-4, 0)
-        }
+        bat.move(-3, bat.curve * Math.sin(bat.angle))
     }
 
     drawEnemy(ctx, bat, config, frame, moveFlyingBat, correctPositionFlyingBat)
 }
 
-const drawIdleBat = (ctx, bat, config, frame) => {
+export const drawIdleBat = (ctx, bat, config, frame) => {
     function correctPositionIdleBat(enemy, config) {
         const rightEdgeXPosition = enemy.positionX + enemy.scaledWidth
         const downEdgeYPosition = enemy.positionY + enemy.scaledHeight
@@ -127,6 +62,59 @@ const drawIdleBat = (ctx, bat, config, frame) => {
     drawEnemy(ctx, bat, config, frame, moveIdleBat, correctPositionIdleBat)
 }
 
+export const drawGhost = (ctx, ghost, config, frame) => {
+    function correctPositionGhost(enemy, config) {}
+
+    function moveGhost(ghost, frame) {
+        if (frame % 4 === 0) {
+            const xDivider = ghostController.xDivider
+            const yDivider = ghostController.yDivider
+            const isXSine = ghostController.xSine
+            const isYSine = ghostController.ySine
+
+
+            const x = config.canvasWidth / 2 * sinOrCos(isXSine,ghost.angle * Math.PI / xDivider)
+                + config.canvasWidth / 2
+                - ghost.scaledWidth / 2
+
+            const y = config.canvasHeight / 2 * sinOrCos(isYSine,ghost.angle * Math.PI / yDivider)
+                + config.canvasHeight / 2
+                - ghost.scaledHeight / 2
+
+            ghost.setPosition(x, y)
+        }
+    }
+
+
+    drawEnemy(ctx, ghost, config, frame, moveGhost, correctPositionGhost)
+}
+
+const sinOrCos = (isSine, x) => {
+    if (isSine) {
+        return Math.sin(x)
+    }
+
+    return Math.cos(x)
+}
+
+export const drawRazorBall = (ctx, razorBall, config, frame) => {
+    function correctPositionRazorBall(enemy, config) {}
+
+    function moveRazorBall(razorBall, frame) {
+        if (frame % razorBall.interval === 0) {
+            razorBall.approachingX = Math.random() * (config.canvasWidth - razorBall.scaledWidth)
+            razorBall.approachingY = Math.random() * (config.canvasHeight - razorBall.scaledHeight)
+        }
+
+        const xDifference = razorBall.positionX - razorBall.approachingX
+        const yDifference = razorBall.positionY - razorBall.approachingY
+
+        razorBall.move(-xDifference / 50, -yDifference / 50)
+    }
+
+    drawEnemy(ctx, razorBall, config, frame, moveRazorBall, correctPositionRazorBall)
+}
+
 const drawEnemy = (ctx, enemy, config, frame, move, correction) => {
     move(enemy, frame)
     correction(enemy, config)
@@ -136,9 +124,12 @@ const drawEnemy = (ctx, enemy, config, frame, move, correction) => {
         enemy.positionX, enemy.positionY, enemy.scaledWidth, enemy.scaledHeight)
 
     enemy.nextFrame()
+    animationController.nextFrame()
 }
 
 export const animationInit = () => {
     animationController.addAnimation(drawIdleBat, "IDLE_BAT")
     animationController.addAnimation(drawFlyingBat, "FLYING_BAT")
+    animationController.addAnimation(drawGhost, "GHOST")
+    animationController.addAnimation(drawRazorBall, "RAZOR_BALL")
 }

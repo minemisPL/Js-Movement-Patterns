@@ -16,7 +16,6 @@ class EnemyManager {
         this._enemyGroups.forEach(group => {
             if (group.id === id) {
                 foundGroup = group.enemyGroup
-                return
             }
         })
         return foundGroup
