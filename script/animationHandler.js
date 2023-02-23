@@ -15,16 +15,13 @@ class AnimationController {
     }
 
     getAnimation(id) {
-        let foundAnimation = null
+        const animationObj = this._animationList.find(animationObj => animationObj.id === id)
 
-        this._animationList.forEach(animationObj => {
-            if (animationObj.id === id) {
-                foundAnimation = animationObj.animation
-                return
-            }
-        })
+        if (animationObj == null) {
+            throw new Error("No such animation")
+        }
 
-        return foundAnimation
+        return animationObj.animation
     }
 
     nextFrame() {
